@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace WebApp.Controllers
@@ -18,9 +19,9 @@ namespace WebApp.Controllers
             return "This is my default action...";
         }
 
-        public string Welcom()
+        public string Welcome(string name,int ID=1)
         {
-            return "name is ZRJ";
+            return HtmlEncoder.Default.Encode($"Hello {name},NumTimes is {ID}");
         }
     }
 }
