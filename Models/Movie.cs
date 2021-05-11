@@ -23,5 +23,12 @@ namespace WebApp.Models
 
         [RegularExpression(@"^[A-Z]+[a-zA-Z0-9""'\s-]*$"), StringLength(5)]
         public string Rating { get; set; }
+
+        [Column(TypeName ="nvarchar(5000)")]
+        [StringLength(2060, MinimumLength = 3)]
+        public string Content { get; set; }
+
+
+
     }
 }

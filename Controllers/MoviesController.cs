@@ -37,6 +37,20 @@ namespace WebApp.Controllers
             var movies = from m in _context.Movie
                          select m;
 
+            //var movies = from m in _context.Movie
+            //             select  new
+            //             {
+            //                 m.Title,
+            //                 V = m.Content.Substring(0, 6),
+            //                 m.Id,
+            //                 m.Genre,
+            //                 m.Price,
+            //                 m.Rating,
+            //                 m.ReleaseDate
+            //             };
+
+
+
             if (!string.IsNullOrEmpty(searchString))
             {
                 movies = movies.Where(s => s.Title.Contains(searchString));
@@ -71,11 +85,12 @@ namespace WebApp.Controllers
 
             var movie = await _context.Movie
                 .FirstOrDefaultAsync(m => m.Id == id);
+             
             if (movie == null)
             {
                 return NotFound();
             }
-
+ 
             return View(movie);
         }
 
@@ -90,9 +105,9 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie)
+        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Price,Rating,Content")] Movie movie)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid)//模型验证
             {
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
@@ -122,7 +137,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Price,Rating,Content")] Movie movie)
         {
             if (id != movie.Id)
             {

@@ -29,6 +29,7 @@ namespace WebApp.Models
                         ReleaseDate = DateTime.Parse("1989-2-12"),
                         Genre = "Romantic Comedy",
                         Rating = "R",
+                        Content="小说内容",
                         Price = 7.99M
                     },
 
@@ -38,6 +39,7 @@ namespace WebApp.Models
                         ReleaseDate = DateTime.Parse("1984-3-13"),
                         Genre = "Comedy",
                         Rating = "R",
+                        Content = "小说内容",
                         Price = 8.99M
                     },
 
@@ -47,6 +49,7 @@ namespace WebApp.Models
                         ReleaseDate = DateTime.Parse("1986-2-23"),
                         Genre = "Comedy",
                         Rating = "R",
+                        Content = "小说内容",
                         Price = 9.99M
                     },
 
@@ -55,6 +58,7 @@ namespace WebApp.Models
                         Title = "Rio Bravo",
                         ReleaseDate = DateTime.Parse("1959-4-15"),
                         Genre = "Western",
+                        Content = "小说内容",
                         Rating = "R",
                         Price = 3.99M
                     }

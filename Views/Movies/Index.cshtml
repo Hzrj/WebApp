@@ -26,19 +26,22 @@
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Movies[0].Title)
-            </th>                                                       
-            <th>                                                        
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Movies[0].ReleaseDate)
-            </th>                                                        
-            <th>                                                         
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Movies[0].Genre)
-            </th>                                                        
-            <th>                                                         
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Movies[0].Price)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Movies[0].Rating)
             </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.Movies[0].Content)
+            </th>*@
         </tr>
     </thead>
     <tbody>
@@ -60,6 +63,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Rating)
             </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>*@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

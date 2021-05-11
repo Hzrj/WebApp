@@ -17,7 +17,7 @@ namespace WebApp.Controllers
         //https://localhost:{port}/HelloWorld/welcome?name=ZRJ&numtimes=9
         public IActionResult Welcome(string name,int NumTimes=1)
         {
-            ViewData["Message"] = "Hello " + name;
+            ViewData["Message"] = "Hello " + name+"Welcome my Blog";
             ViewData["NumTimes"] = NumTimes;
             return View();
         }
