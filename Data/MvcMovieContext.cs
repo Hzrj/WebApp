@@ -11,5 +11,7 @@ namespace WebApp.Data
         }
 
         public DbSet<Movie> Movie { get; set; }
+        public DbSet<Login> Login { get; set; }
+
     }
 }
