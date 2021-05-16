@@ -12,6 +12,8 @@ namespace WebApp.Data
 
         public DbSet<Movie> Movie { get; set; }
         public DbSet<Login> Login { get; set; }
+        public DbSet<WF_SendMail> WF_SendMail { get; set; }
+
 
     }
 }

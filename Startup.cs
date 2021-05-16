@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using WebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp
 {
@@ -30,20 +31,23 @@ namespace WebApp
             services.AddDbContext<MvcMovieContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MvcMovieContext")));
 
-            ////注册Cookie认证服务
-            //services
-            //    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, option =>
-            //    {
-            //        option.Cookie.Name = "3411.TOPWebAppTokenCookie";//设置存储用户登录信息（用户Token信息）的Cookie名称
-            //        option.Cookie.HttpOnly = true;//设置存储用户登录信息（用户Token信息）的Cookie，无法通过客户端浏览器脚本(如JavaScript等)访问到
-            //        option.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;//设置存储用户登录信息（用户Token信息）的Cookie，只会通过HTTPS协议传递，如果是HTTP协议，Cookie不会被发送。注意，option.Cookie.SecurePolicy属性的默认值是Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest
-            //    });
+            services.AddDistributedMemoryCache();
+            services.AddHttpContextAccessor();
+            services.AddSession(options =>
+            {
+                //空闲60秒后, session自动清空
+                options.IdleTimeout = TimeSpan.FromSeconds(60);
+                options.Cookie.HttpOnly = true;
+            });
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSession();
+            //app.UseMvc();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

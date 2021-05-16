@@ -155,12 +155,12 @@ namespace WebApp.Tools
             MemoryStream ms = new MemoryStream();
             CryptoStream cs = new CryptoStream(ms, des.CreateDecryptor(), CryptoStreamMode.Write);
             cs.Write(inputByteArray, 0, inputByteArray.Length);
-            cs.FlushFinalBlock();
+            //cs.FlushFinalBlock();
 
             StringBuilder ret = new StringBuilder();
 
             return System.Text.Encoding.Default.GetString(ms.ToArray());
         }
-
+        //https://blog.csdn.net/weixin_33957648/article/details/86001732?utm_term=c#md5%E8%A7%A3%E5%AF%86%E6%96%B9%E6%B3%95&utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~sobaiduweb~default-1-86001732&spm=3001.4430
     }
 }
