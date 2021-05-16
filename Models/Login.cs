@@ -25,7 +25,7 @@ namespace WebApp.Models
         [Display(Name = "用户账号")]
         public string Account { get; set; }
 
-        [Required(ErrorMessage = "请输入验证码")]
+        //[Required(ErrorMessage = "请输入验证码")]
         [Display(Name = "验证码")]
         [StringLength(20,MinimumLength =6)]
         public string Code { get; set; }
