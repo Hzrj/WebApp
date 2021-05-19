@@ -1,13 +1,12 @@
-﻿@model WebApp.Models.Login
-
+﻿
+@model WebApp.Models.Login
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Register ";
 }
 
-<h1>Create</h1>
-
-<h4>Login</h4>
+<h1>Register</h1>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
@@ -34,9 +33,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="Code" class="control-label"></label>
-                <input type="submit" value="发送验证码" asp-action="CountDown" />
+                <input type="submit" class="btn btn-primary  btn-sm" value="发送验证码" asp-action="CountDown" />
                 <input asp-for="Code" class="form-control" />
-                @*<span asp-validation-for="Code" class="text-danger"></span>*@
+                <span asp-validation-for="Code" class="text-danger"></span>
+                @ViewData["VSendMail"]
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary btn-seed" />

@@ -10,8 +10,8 @@ using WebApp.Data;
 namespace WebApp.Migrations
 {
     [DbContext(typeof(MvcMovieContext))]
-    [Migration("20210516080901_Blog")]
-    partial class Blog
+    [Migration("20210519080332_IP")]
+    partial class IP
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,7 +37,6 @@ namespace WebApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
@@ -46,6 +45,9 @@ namespace WebApp.Migrations
 
                     b.Property<bool>("Enable")
                         .HasColumnType("bit");
+
+                    b.Property<string>("IP")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Now")
                         .HasColumnType("datetime2");
@@ -107,6 +109,24 @@ namespace WebApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Movie");
+                });
+
+            modelBuilder.Entity("WebApp.Models.Verify", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Account")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Verify");
                 });
 
             modelBuilder.Entity("WebApp.Models.WF_SendMail", b =>

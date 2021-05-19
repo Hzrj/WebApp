@@ -16,6 +16,7 @@ using WebApp.Tools;
 using static System.Collections.Specialized.BitVector32;
 using System.Runtime;
 using System.Threading;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace WebApp.Controllers
 {
@@ -76,7 +77,7 @@ namespace WebApp.Controllers
             return View();
         }
 
-      
+
         // POST: Logins/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -145,23 +146,43 @@ namespace WebApp.Controllers
         {
             return _context.Login.Any(e => e.ID == id);
         }
+
+        public async Task<IActionResult> DelVerify(string   account)
+        {
+            var verify1 = await _context.Verify.Where(v=>v.Account==account).FirstOrDefaultAsync();
+            _context.Verify.Remove(verify1);
+            await _context.SaveChangesAsync();
+            return new NoContentResult();
+        }
         /// <summary>
         /// 发送验证码
         /// </summary>
         /// <returns></returns>
-        public async Task <IActionResult>  CountDown(string account, [Bind("Account", "Code")] Verify verify)
+        public async Task<IActionResult> CountDown(string account, [Bind("Account", "Code")] Verify verify)
         {
             var result = _context.WF_SendMail.Where(x => x.Type == "注册").FirstOrDefault();
             var code = Tools.SendMail.CreateRandom(5);
-            verify.Account = account;
-            verify.Code = code;
-            _context.Verify.Add(verify);
-            await _context.SaveChangesAsync();
+            var verifyAccount = _context.Verify.Where(x => x.Account == account).FirstOrDefault();
+            if (verifyAccount == null)
+            {
+                verify.Account = account;
+                verify.Code = code;
+                _context.Verify.Add(verify);
+                await _context.SaveChangesAsync();
 
-            Tools.SendMail.SendEmail1(account, result.Title, result.body, result.Email, result.SecretKey, code);
+                //Tools.SendMail.SendEmail1(account, result.Title, result.body, result.Email, result.SecretKey, code);
+                await SendMail(account,"注册",code);
+
+                //Thread.Sleep(60000);//休眠时间
+                //var verify1 = await _context.Verify.FindAsync(verify.ID);
+                //_context.Verify.Remove(verify1);
+                //await _context.SaveChangesAsync();
+            }
+            else
+            {
+                ViewData["VSendMail"] = "已发送验证码";
+            }
             return new NoContentResult();
-            //return new EmptyResult ();
-            //return RedirectToAction(nameof(Create));
         }
         // GET: Logins/Create 注册账号
         // POST: Logins/Create
@@ -185,14 +206,19 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                login.RePassword = login.Password = EncryptionDecryptionUtility.MD5Encrypt(login.Password, "9");
+                //login.RePassword = login.Password = EncryptionDecryptionUtility.MD5Encrypt(login.Password, "9");
                 login.Password = login.RePassword = PasswordHasher.HashPassword(login.Password);
                 login.Now = Convert.ToDateTime(DateTime.Now.ToUniversalTime().ToString());
-                ViewData["SessionCode"] = this.HttpContext.Session.GetString("SessionCode");
-                if (ViewData["SessionCode"].ToString() == login.Code)
+                //ViewData["SessionCode"] = this.HttpContext.Session.GetString("SessionCode");
+                var v = _context.Verify.Where(x => x.Account ==login.Account).FirstOrDefault();
+                if (string.IsNullOrEmpty(v.Code) )
+                {
+                    throw new ArgumentNullException(nameof(v.Code));
+                }
+                if (v.Code == login.Code)
                 {
                     _context.Add(login);
-
+                    DelVerify(login.Account);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -204,25 +230,34 @@ namespace WebApp.Controllers
             }
             return View(login);
         }
-        public async Task<IActionResult> SendMail(string account, string type)
+        public async Task<NoContentResult> SendMail(string account, string type,string  code="")
         {
             if (ModelState.IsValid)
             {
-                var result = _context.WF_SendMail.Where(x => x.Type == type).FirstOrDefault();
+                var result =  _context.WF_SendMail.Where(x => x.Type == type).FirstOrDefault();
                 if (result == null)
                 {
                     ViewData["VSendMail"] = "没有此这类型";
                 }
                 else
                 {
-                    var code = Tools.SendMail.CreateRandom(5);
-                    HttpContext.Session.SetString("SessionCode", code);
-                    result.body += "有效时间为5分钟 验证码:" + code;
-                    Tools.SendMail.SendEmail1(account, result.Title, result.body, result.Email, result.SecretKey, code);
-
+                    var body = result.body;
+                    switch (type)
+                    {
+                        case "登录":
+                            Tools.SendMail.SendEmail1(account, result.Title, body, result.Email, result.SecretKey, type);
+                            break;
+                        case"修改":
+                            Tools.SendMail.SendEmail1(account, result.Title, body, result.Email, result.SecretKey, type);
+                            break;
+                        case "注册":
+                            Tools.SendMail.SendEmail1(account, result.Title, body+code, result.Email, result.SecretKey, type, code);
+                            break;
+                    }
+                    //Tools.SendMail.SendEmail1(account, result.Title, result.body, result.Email, result.SecretKey, code);
                 }
             }
-            return View();
+            return new NoContentResult();
         }
         /// <summary>
         /// 登录
@@ -233,6 +268,8 @@ namespace WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string account, string password)
         {
+            //var ClientIP = HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+
             if (ModelState.IsValid)
             {
                 var result = _context.Login.Where(x => x.Account == account).FirstOrDefault();
@@ -244,8 +281,10 @@ namespace WebApp.Controllers
                 if (PasswordHasher.VerifyHashedPassword(password, result.Password))
                 {
                     result.Deadline = Convert.ToDateTime(DateTime.Now.ToUniversalTime().ToString());
+                    result.IP= HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();//获取IP地址
                     //Tools.SendMail.SendEmail1("1574697082@qq.com", "3411.top","3411.top");
                     //Tools.SendMail.SendEmail1("919427340@qq.com", "3411.top", "3411.top");
+                    await SendMail(account, "登录");
                     return Redirect("~/Logins/Index");
                 }
                 else

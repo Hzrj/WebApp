@@ -40,7 +40,7 @@ namespace WebApp.Tools
 
      
         /// <summary>
-        /// 发送注册验证码
+        /// 发送邮件
         /// </summary>
         /// <param name="mailTo">收件人</param>
         /// <param name="mailSubject">标题</param>
@@ -48,7 +48,7 @@ namespace WebApp.Tools
         /// <param name="email">发送者</param>
         /// <param name="secretkey">秘钥</param>
         /// <param name="code">验证码</param>
-        public static void SendEmail1(string mailTo, string mailSubject, string mailContent,string email,string secretkey,string code)
+        public static void SendEmail1(string mailTo, string mailSubject, string mailContent,string email,string secretkey,string type, string code = "")
         {
             SmtpClient mailClient = new SmtpClient("smtp.qq.com");
             mailClient.EnableSsl = true;
@@ -58,7 +58,18 @@ namespace WebApp.Tools
             MailMessage message = new MailMessage(new MailAddress(email), new MailAddress(mailTo));//发件人，收件人
             message.IsBodyHtml = true;
             // message.Bcc.Add(new MailAddress("tst@qq.com")); //可以添加多个收件人
-            message.Body = mailContent+code;//邮件内容
+            switch (type)
+            {
+                case "登录":
+                    message.Body = mailContent;//邮件内容
+                    break;
+                case "修改":
+                    message.Body = mailContent;//邮件内容
+                    break;
+                default:
+                    message.Body = "您的账号正在3411.TOP上注册账号,验证码:" + code;//邮件内容
+                    break;
+            }
             message.Subject = mailSubject;//邮件主题
                                           //Attachment 附件
                                           //Attachment att = new Attachment(@"C:/hello.txt");

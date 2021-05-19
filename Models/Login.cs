@@ -27,7 +27,7 @@ namespace WebApp.Models
 
         //[Required(ErrorMessage = "请输入验证码")]
         [Display(Name = "验证码")]
-        [StringLength(20,MinimumLength =6)]
+        [StringLength(20,MinimumLength =5)]
         public string Code { get; set; }
 
         [Display(Name = "注册时间")]
@@ -61,14 +61,17 @@ namespace WebApp.Models
         [Compare("Password", ErrorMessage = "两次输入的密码不一致")]
         [PasswordPropertyText]
         [Required]
-        [Display(Name = "用户密码")]
+        [Display(Name = "确认密码")]
         [StringLength(120, MinimumLength = 6)]
         public string RePassword { get; set; }
 
-        public static explicit operator ArrayList(Login v)
-        {
-            throw new NotImplementedException();
-        }
+        [HiddenInput(DisplayValue = false)]//会让改属性在编辑的时候不显示出来。
+        [Display(Name = "IP地址")]
+        public string IP { get; set; }
+        //public static explicit operator ArrayList(Login v)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         //上传图片到数据库
         //https://www.cnblogs.com/stoneniqiu/p/3601893.html
