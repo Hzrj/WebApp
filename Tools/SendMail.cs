@@ -64,7 +64,7 @@ namespace WebApp.Tools
                     message.Body = mailContent;//邮件内容
                     break;
                 case "修改":
-                    message.Body = mailContent;//邮件内容
+                    message.Body = mailContent + "验证码:" + code;//邮件内容
                     break;
                 default:
                     message.Body = "您的账号正在3411.TOP上注册账号,验证码:" + code;//邮件内容

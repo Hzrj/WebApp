@@ -1,26 +1,20 @@
 ﻿@model WebApp.Models.Login
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Update";
+    TempData["Title"] = "Update";
+    var RazorName = ViewData["Title"];
 }
 
 <h1>Edit</h1>
-
-<h4>Login</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ID" />
-            <div class="form-group">
-                <label asp-for="AccountName" class="control-label"></label>
-                <input asp-for="AccountName" class="form-control" />
-                <span asp-validation-for="AccountName" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="Account" class="control-label"></label>
-                <input asp-for="Account" class="form-control" />
+                <input asp-for="Account" class="form-control" placeholder="jane.doe@example.com" />
                 <span asp-validation-for="Account" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -35,48 +29,22 @@
             </div>
             <div class="form-group">
                 <label asp-for="Code" class="control-label"></label>
+                <input type="submit" class="btn btn-primary  btn-sm" value="发送验证码" asp-action="CountDown" />
                 <input asp-for="Code" class="form-control" />
                 <span asp-validation-for="Code" class="text-danger"></span>
+                @ViewData["VSendMail"]
             </div>
             <div class="form-group">
-                <label asp-for="Now" class="control-label"></label>
-                <input asp-for="Now" class="form-control" />
-                <span asp-validation-for="Now" class="text-danger"></span>
+                <input type="submit" value="Edit" class="btn btn-primary btn-seed" />
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Online" /> @Html.DisplayNameFor(model => model.Online)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Deadline" class="control-label"></label>
-                <input asp-for="Deadline" class="form-control" />
-                <span asp-validation-for="Deadline" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RoleID" class="control-label"></label>
-                <input asp-for="RoleID" class="form-control" />
-                <span asp-validation-for="RoleID" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Enable" /> @Html.DisplayNameFor(model => model.Enable)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="version" class="control-label"></label>
-                <input asp-for="version" class="form-control" />
-                <span asp-validation-for="version" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+            <input name="Title" class="form-control" value="@ViewData["Title"]" hidden="hidden" />
+
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Login">Back to Login</a>
 </div>
 
 @section Scripts {
